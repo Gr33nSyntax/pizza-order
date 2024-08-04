@@ -211,8 +211,101 @@ def delivery_function():
     delivery_window.mainloop()
 
 # Number of Pizzas Window Functions
+"""Number of Pizzas Function - adds 1 to the quantity of pizzas wanted"""
+def np_increase_function():
+    number = int(np_number_ent.get())
+    if number >= 1 and number < 5:
+        np_number_ent.config(state="normal")
+        np_number_ent.delete(0, tk.END)
+        number += 1
+        np_number_ent.insert(0, number)
+        np_number_ent.config(state="disabled")
+
+"""Number of Pizzas Function - subtracts 1 from the quantity of pizzas wanted"""
+def np_decrease_function():
+    number = int(np_number_ent.get())
+    if number > 1 and number <= 5:
+        np_number_ent.config(state="normal")
+        np_number_ent.delete(0, tk.END)
+        number -= 1
+        np_number_ent.insert(0, number)
+        np_number_ent.config(state="disabled")
+
+"""Number of Pizzas Function - submits information, moves onto Pizzas window"""
+def np_submit_function():
+    global number_pizzas
+    number_pizzas = int(np_number_ent.get())
+    number_pizzas_window.destroy()
+    pizzas_function()
+
+"""Number of Pizzas Function - cancels order, goes back to order type page"""
+def np_cancel_order_function():
+    number_pizzas_window.destroy()
+    order_type_function()
+
 """Number of Pizzas Function - creates Number of Pizzas window"""
 def number_pizzas_function():
-    print("Number of Pizzas window")
+    global number_pizzas_window
+    number_pizzas_window = tk.Tk()
+    number_pizzas_window.title("Dream Pizzas - Number of Pizzas")
+    number_pizzas_window.geometry("800x400")
+    number_pizzas_window.minsize(800, 400)
+    number_pizzas_lbl = tk.Label(master=number_pizzas_window,  
+                            text="Number of Pizzas",
+                            font=("Zain", 32))
+    np_how_many_lbl = tk.Label(master=number_pizzas_window,
+                               text="How many pizzas?",
+                               font=("Zain", 24))
+    np_frm = tk.Frame(master=number_pizzas_window)
+    np_decrease_btn = tk.Button(master=np_frm,
+                                text="-",
+                                font=("Zain"),
+                                command=np_decrease_function,
+                                width=2)
+    global np_number_ent
+    np_number_ent = tk.Entry(master=np_frm,
+                             font=("Zain"),
+                             width=4,
+                             justify="center")
+    np_number_ent.insert(0, 1)
+    np_number_ent.config(state="disabled")
+    np_increase_btn = tk.Button(master=np_frm,
+                                text="+",
+                                font=("Zain"),
+                                command=np_increase_function,
+                                width=2)
+    np_submit_btn = tk.Button(master=number_pizzas_window,
+                              text="Submit",
+                              font=("Zain", 24),
+                              command=np_submit_function)
+    np_cancel_order_btn = tk.Button(master=number_pizzas_window,
+                                  text="Cancel Order",
+                                  font=("Zain", 12),
+                                  command=np_cancel_order_function)
+    number_pizzas_lbl.pack(anchor="n")
+    np_how_many_lbl.pack(anchor="center", expand=True)
+    np_frm.pack(anchor="center", expand=True)
+    np_decrease_btn.pack(side="left", padx=5)
+    np_number_ent.pack(side="left", padx=5)
+    np_increase_btn.pack(side="left", padx=5)
+    np_submit_btn.pack(anchor="center", expand=True)
+    np_cancel_order_btn.pack(anchor="se", padx=10, pady=10)
+    number_pizzas_window.mainloop()
+
+
+# Pizzas Window Functions
+"""Pizzas Function - submits information, moves onto Summary window"""
+def p_submit_function():
+    pass
+
+"""Pizzas Function - cancels order, goes back to order type page"""
+def p_cancel_order_function():
+    pass
+
+"""Pizzas Function - displays pizza choices and adds choices to the order"""
+def pizzas_function():
+    print("Pizzas window")
+
+
 
 order_type_function()
