@@ -80,13 +80,61 @@ def order_type_function():
     order_type_window.mainloop()
 
 #Pick Up Window Functions
+"""Pick Up Function - submits information, moves onto Number of Pizzas window."""
+def pu_submit_function():
+    name_ent = pu_name_ent.get()
+    name_check = name_ent.isspace()
+    if len(name_ent) != 0 and name_check == False:
+        global name 
+        name = pu_name_ent.get()
+        pick_up_window.destroy()
+        number_pizzas_function()
+
+"""Pick Up Function - cancels order, goes back to order type page"""
+def pu_cancel_order_function():
+    pick_up_window.destroy()
+    order_type_function()
+
 """Pick Up Function - creates Pick Up window"""
 def pick_up_function():
-    print('Pick Up Window')
+    global pick_up_window
+    pick_up_window = tk.Tk()
+    pick_up_window.title("Dream Pizzas - Pick Up")
+    pick_up_window.geometry("500x300")
+    pick_up_window.minsize(500, 300)
+    pick_up_lbl = tk.Label(master=pick_up_window,  
+                            text="Pick Up",
+                            font=("Zain", 32))
+    pu_name_lbl = tk.Label(master=pick_up_window, 
+                            text="Name:",
+                            font=("Zain", 24))
+    global pu_name_ent
+    pu_name_ent = tk.Entry(master=pick_up_window,
+                             font=("Zain", 18))
+    pu_submit_btn = tk.Button(master=pick_up_window,
+                              text="Submit",
+                              font=("Zain", 24),
+                              command=pu_submit_function)
+    pu_cancel_order_btn = tk.Button(master=pick_up_window,
+                                 text="Cancel Order",
+                                 font=("Zain", 12),
+                                 command=pu_cancel_order_function)
+    pick_up_lbl.pack(anchor="n")
+    pu_name_lbl.pack(anchor="center", expand=True)
+    pu_name_ent.pack(anchor="center", expand=True)
+    pu_submit_btn.pack(anchor="center", expand=True)
+    pu_cancel_order_btn.pack(anchor="se", padx=10, pady=10)
+    pick_up_window.mainloop()
 
 # Delivery Window Functions
 """Delivery Function - creates delivery window"""
 def delivery_function():
-    print('Delivery Window')
-    
+    print("Delivery Window")
+
+# Number of Pizzas Window Functions
+def number_pizzas_function():
+    print("Number of Pizzas Window")
+
+
+
 order_type_function()
