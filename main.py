@@ -127,14 +127,92 @@ def pick_up_function():
     pick_up_window.mainloop()
 
 # Delivery Window Functions
+"""Delivery Function - submits information, moves onto Number of Pizzas window."""
+def d_submit_function():
+    name_ent = d_name_ent.get()
+    address_ent = d_address_ent.get()
+    phone_ent = d_phone_ent.get()
+    name_ent_check = name_ent.isspace()
+    address_ent_check = address_ent.isspace()
+    phone_ent_check = phone_ent.isspace()
+    if (len(name_ent) !=0 and name_ent_check == False 
+        and len(address_ent) !=0 and address_ent_check == False 
+        and len(phone_ent) !=0 and phone_ent_check == False):
+        global name
+        name = d_name_ent.get()
+        global address
+        address = d_address_ent.get()
+        global phone_number
+        phone_number = d_phone_ent.get()
+        delivery_window.destroy()
+        number_pizzas_function()
+
+
+"""Delivery Function - cancels order, goes back to order type page"""
+def d_cancel_order_function():
+    delivery_window.destroy()
+    order_type_function()
+
 """Delivery Function - creates delivery window"""
 def delivery_function():
-    print("Delivery Window")
+    global delivery_window
+    delivery_window = tk.Tk()
+    delivery_window.title("Dream Pizzas - Delivery")
+    delivery_window.geometry("800x400")
+    delivery_window.minsize(800, 400)
+    delivery_lbl = tk.Label(master=delivery_window,  
+                            text="Delivery",
+                            font=("Zain", 32))
+    d_disclaimer_lbl = tk.Label(master=delivery_window,
+                                text="*$5 delivery fee applies",
+                                font=("Zain", 12))
+    d_name_frm = tk.Frame(master=delivery_window)
+    d_name_lbl = tk.Label(master=d_name_frm,
+                          text="Name:",
+                          font=("Zain", 24))
+    global d_name_ent
+    d_name_ent = tk.Entry(master=d_name_frm,
+                          font=("Zain", 18))
+    d_address_frm = tk.Frame(master=delivery_window)
+    d_address_lbl = tk.Label(master=d_address_frm,
+                             text="Address:",
+                             font=("Zain", 24))
+    global d_address_ent
+    d_address_ent = tk.Entry(master=d_address_frm,
+                             font=("Zain", 18))
+    d_phone_frm = tk.Frame(master=delivery_window)
+    d_phone_lbl = tk.Label(master=d_phone_frm,
+                           text="Phone:",
+                           font=("Zain", 24))
+    global d_phone_ent
+    d_phone_ent = tk.Entry(master=d_phone_frm,
+                            font=("Zain", 18))
+    d_submit_btn = tk.Button(master=delivery_window,
+                             text="Submit",
+                             font=("Zain", 24),
+                             command=d_submit_function)
+    d_cancel_order_btn = tk.Button(master=delivery_window,
+                                  text="Cancel Order",
+                                  font=("Zain", 12),
+                                  command=d_cancel_order_function)
+    delivery_lbl.pack(anchor="n")
+    d_disclaimer_lbl.pack(anchor="n")
+    d_name_frm.pack(anchor="center", expand=True, pady=10)
+    d_name_lbl.pack(expand=True, side="left")
+    d_name_ent.pack(expand=True, side="left")
+    d_address_frm.pack(anchor="center", expand=True, pady=10)
+    d_address_lbl.pack(expand=True, side="left")
+    d_address_ent.pack(expand=True, side="left")
+    d_phone_frm.pack(anchor="center", expand=True, pady=10)
+    d_phone_lbl.pack(expand=True, side="left")
+    d_phone_ent.pack(expand=True, side="left")
+    d_submit_btn.pack(anchor="center", expand=True)
+    d_cancel_order_btn.pack(anchor="se", padx=10, pady=10)
+    delivery_window.mainloop()
 
 # Number of Pizzas Window Functions
+"""Number of Pizzas Function - creates Number of Pizzas window"""
 def number_pizzas_function():
-    print("Number of Pizzas Window")
-
-
+    print("Number of Pizzas window")
 
 order_type_function()
