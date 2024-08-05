@@ -1,3 +1,4 @@
 order_demo: ['Name', 'Address', 'Phone', ['Chosen pizza(s) list'], 'Total price']
 order_demo: ['Name', 'Address', 'Phone', ['Chosen pizza(s) list'], 'Total price']
 order_demo: ['Name', 'Address', 'Phone', ['Chosen pizza(s) list'], 'Total price']
+order_demo: ['Name', 'Address', 'Phone', ['Chosen pizza(s) list'], 'Total price']

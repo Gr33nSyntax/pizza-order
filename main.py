@@ -1,19 +1,18 @@
 """A program that will a phone operator to input an order for a customer."""
 import tkinter as tk
-from tkinter import font
 
 # Global Variables
 global saved_orders
-saved_orders = {"order_demo": ["Name", 
-                               "Address", 
-                               "Phone", 
-                               ["Chosen pizza(s) list"], 
+saved_orders = {"order_demo": ["Name",
+                               "Address",
+                               "Phone",
+                               ["Chosen pizza(s) list"],
                                "Total price"]}
 global PIZZAS
-PIZZAS = {"Classic Margherita": 10.50, 
-          "Pepperoni Delight": 10.50, 
-          "Veggie Supreme": 10.50, 
-          "BBQ Chicken": 10.50, 
+PIZZAS = {"Classic Margherita": 10.50,
+          "Pepperoni Delight": 10.50,
+          "Veggie Supreme": 10.50,
+          "BBQ Chicken": 10.50,
           "Hawaiian Paradise": 10.50,
           "Four Cheese Extravaganza": 10.50,
           "Meat Lover’s Feast": 10.50,
@@ -24,16 +23,20 @@ PIZZAS = {"Classic Margherita": 10.50,
           "Pesto & Sun-Dried Tomato Medley": 15.50}
 
 # General Functions
-"""General Function - terminates program"""
+
+
 def terminate_program_function():
+    """General Function - terminates program"""
     with open("saved_orders.txt", "a") as output:
         for key, value in saved_orders.items():
             output.write(f"{key}: {value}\n")
     exit()
 
 # Order Type Functions
-"""Order Type Function - submits information, moves onto Pickup window"""
+
+
 def ot_pu_function():
+    """Order Type Function - submits information, moves onto Pickup window"""
     global address
     address = "N/A"
     global phone_number
@@ -41,14 +44,17 @@ def ot_pu_function():
     order_type_window.destroy()
     pick_up_function()
 
-    
-"""Order Type Function - moves onto Delivery window"""
+
 def ot_d_function():
+    """Order Type Function - moves onto Delivery window"""
     order_type_window.destroy()
     delivery_function()
 
 # Order Type Window
+
+
 def order_type_function():
+    """Order Type Function - creates the Order Type window"""
     global order_type_window
     order_type_window = tk.Tk()
     global current_window
@@ -56,20 +62,20 @@ def order_type_function():
     order_type_window.title("Dream Pizzas - Order Type")
     order_type_window.geometry("500x300")
     order_type_window.minsize(500, 300)
-    order_type_lbl = tk.Label(master=order_type_window,  
-                            text="Order Type",
-                            font=("Zain", 32))
-    ot_pickup_btn = tk.Button(master=order_type_window, 
-                            text="Pickup",
-                            font=("Zain", 24),
-                            width=10,
-                            command=ot_pu_function)
-    ot_delivery_btn = tk.Button(master=order_type_window, 
+    order_type_lbl = tk.Label(master=order_type_window,
+                              text="Order Type",
+                              font=("Zain", 32))
+    ot_pickup_btn = tk.Button(master=order_type_window,
+                              text="Pickup",
+                              font=("Zain", 24),
+                              width=10,
+                              command=ot_pu_function)
+    ot_delivery_btn = tk.Button(master=order_type_window,
                                 text="Delivery",
                                 font=("Zain", 24),
                                 width=10,
                                 command=ot_d_function)
-    ot_exit_btn = tk.Button(master=order_type_window, 
+    ot_exit_btn = tk.Button(master=order_type_window,
                             text="Exit",
                             font=("Zain", 12),
                             command=terminate_program_function)
@@ -79,46 +85,51 @@ def order_type_function():
     ot_exit_btn.pack(anchor="se", padx=10, pady=10)
     order_type_window.mainloop()
 
-#Pick Up Window Functions
-"""Pick Up Function - submits information, moves onto Number of Pizzas window."""
+# Pick Up Window Functions
+
+
 def pu_submit_function():
+    """Pick Up Function - submits information, moves onto Number of Pizzas
+    window."""
     name_ent = pu_name_ent.get()
     name_check = name_ent.isspace()
-    if len(name_ent) != 0 and name_check == False:
-        global name 
+    if len(name_ent) != 0 and name_check is False:
+        global name
         name = pu_name_ent.get()
         pick_up_window.destroy()
         number_pizzas_function()
 
-"""Pick Up Function - cancels order, goes back to order type page"""
+
 def pu_cancel_order_function():
+    """Pick Up Function - cancels order, goes back to order type page"""
     pick_up_window.destroy()
     order_type_function()
 
-"""Pick Up Function - creates Pick Up window"""
+
 def pick_up_function():
+    """Pick Up Function - creates Pick Up window"""
     global pick_up_window
     pick_up_window = tk.Tk()
     pick_up_window.title("Dream Pizzas - Pick Up")
     pick_up_window.geometry("500x300")
     pick_up_window.minsize(500, 300)
-    pick_up_lbl = tk.Label(master=pick_up_window,  
-                            text="Pick Up",
-                            font=("Zain", 32))
-    pu_name_lbl = tk.Label(master=pick_up_window, 
-                            text="Name:",
-                            font=("Zain", 24))
+    pick_up_lbl = tk.Label(master=pick_up_window,
+                           text="Pick Up",
+                           font=("Zain", 32))
+    pu_name_lbl = tk.Label(master=pick_up_window,
+                           text="Name:",
+                           font=("Zain", 24))
     global pu_name_ent
     pu_name_ent = tk.Entry(master=pick_up_window,
-                             font=("Zain", 18))
+                           font=("Zain", 18))
     pu_submit_btn = tk.Button(master=pick_up_window,
                               text="Submit",
                               font=("Zain", 24),
                               command=pu_submit_function)
     pu_cancel_order_btn = tk.Button(master=pick_up_window,
-                                 text="Cancel Order",
-                                 font=("Zain", 12),
-                                 command=pu_cancel_order_function)
+                                    text="Cancel Order",
+                                    font=("Zain", 12),
+                                    command=pu_cancel_order_function)
     pick_up_lbl.pack(anchor="n")
     pu_name_lbl.pack(anchor="center", expand=True)
     pu_name_ent.pack(anchor="center", expand=True)
@@ -127,17 +138,20 @@ def pick_up_function():
     pick_up_window.mainloop()
 
 # Delivery Window Functions
-"""Delivery Function - submits information, moves onto Number of Pizzas window."""
+
+
 def d_submit_function():
+    """Delivery Function - submits information, moves onto Number of Pizzas
+    window"""
     name_ent = d_name_ent.get()
     address_ent = d_address_ent.get()
     phone_ent = d_phone_ent.get()
     name_ent_check = name_ent.isspace()
     address_ent_check = address_ent.isspace()
     phone_ent_check = phone_ent.isspace()
-    if (len(name_ent) !=0 and name_ent_check == False 
-        and len(address_ent) !=0 and address_ent_check == False 
-        and len(phone_ent) !=0 and phone_ent_check == False):
+    if (len(name_ent) != 0 and name_ent_check is False
+            and len(address_ent) != 0 and address_ent_check is False
+            and len(phone_ent) != 0 and phone_ent_check is False):
         global name
         name = d_name_ent.get()
         global address
@@ -148,19 +162,20 @@ def d_submit_function():
         number_pizzas_function()
 
 
-"""Delivery Function - cancels order, goes back to order type page"""
 def d_cancel_order_function():
+    """Delivery Function - cancels order, goes back to order type page"""
     delivery_window.destroy()
     order_type_function()
 
-"""Delivery Function - creates delivery window"""
+
 def delivery_function():
+    """Delivery Function - creates delivery window"""
     global delivery_window
     delivery_window = tk.Tk()
     delivery_window.title("Dream Pizzas - Delivery")
     delivery_window.geometry("800x400")
     delivery_window.minsize(800, 400)
-    delivery_lbl = tk.Label(master=delivery_window,  
+    delivery_lbl = tk.Label(master=delivery_window,
                             text="Delivery",
                             font=("Zain", 32))
     d_disclaimer_lbl = tk.Label(master=delivery_window,
@@ -186,15 +201,15 @@ def delivery_function():
                            font=("Zain", 24))
     global d_phone_ent
     d_phone_ent = tk.Entry(master=d_phone_frm,
-                            font=("Zain", 18))
+                           font=("Zain", 18))
     d_submit_btn = tk.Button(master=delivery_window,
                              text="Submit",
                              font=("Zain", 24),
                              command=d_submit_function)
     d_cancel_order_btn = tk.Button(master=delivery_window,
-                                  text="Cancel Order",
-                                  font=("Zain", 12),
-                                  command=d_cancel_order_function)
+                                   text="Cancel Order",
+                                   font=("Zain", 12),
+                                   command=d_cancel_order_function)
     delivery_lbl.pack(anchor="n")
     d_disclaimer_lbl.pack(anchor="n")
     d_name_frm.pack(anchor="center", expand=True, pady=10)
@@ -211,8 +226,10 @@ def delivery_function():
     delivery_window.mainloop()
 
 # Number of Pizzas Window Functions
-"""Number of Pizzas Function - adds 1 to the quantity of pizzas wanted"""
+
+
 def np_increase_function():
+    """Number of Pizzas Function - adds 1 to the quantity of pizzas wanted"""
     number = int(np_number_ent.get())
     if number >= 1 and number < 5:
         np_number_ent.config(state="normal")
@@ -221,8 +238,10 @@ def np_increase_function():
         np_number_ent.insert(0, number)
         np_number_ent.config(state="disabled")
 
-"""Number of Pizzas Function - subtracts 1 from the quantity of pizzas wanted"""
+
 def np_decrease_function():
+    """Number of Pizzas Function - subtracts 1 from the quantity of pizzas
+    wanted"""
     number = int(np_number_ent.get())
     if number > 1 and number <= 5:
         np_number_ent.config(state="normal")
@@ -231,28 +250,33 @@ def np_decrease_function():
         np_number_ent.insert(0, number)
         np_number_ent.config(state="disabled")
 
-"""Number of Pizzas Function - submits information, moves onto Pizzas window"""
+
 def np_submit_function():
+    """Number of Pizzas Function - submits information, moves onto Pizzas
+    window"""
     global number_pizzas
     number_pizzas = int(np_number_ent.get())
     number_pizzas_window.destroy()
     pizzas_function()
 
-"""Number of Pizzas Function - cancels order, goes back to order type page"""
+
 def np_cancel_order_function():
+    """Number of Pizzas Function - cancels order, goes back to order type
+    page"""
     number_pizzas_window.destroy()
     order_type_function()
 
-"""Number of Pizzas Function - creates Number of Pizzas window"""
+
 def number_pizzas_function():
+    """Number of Pizzas Function - creates Number of Pizzas window"""
     global number_pizzas_window
     number_pizzas_window = tk.Tk()
     number_pizzas_window.title("Dream Pizzas - Number of Pizzas")
     number_pizzas_window.geometry("800x400")
     number_pizzas_window.minsize(800, 400)
-    number_pizzas_lbl = tk.Label(master=number_pizzas_window,  
-                            text="Number of Pizzas",
-                            font=("Zain", 32))
+    number_pizzas_lbl = tk.Label(master=number_pizzas_window,
+                                 text="Number of Pizzas",
+                                 font=("Zain", 32))
     np_how_many_lbl = tk.Label(master=number_pizzas_window,
                                text="How many pizzas?",
                                font=("Zain", 24))
@@ -279,9 +303,9 @@ def number_pizzas_function():
                               font=("Zain", 24),
                               command=np_submit_function)
     np_cancel_order_btn = tk.Button(master=number_pizzas_window,
-                                  text="Cancel Order",
-                                  font=("Zain", 12),
-                                  command=np_cancel_order_function)
+                                    text="Cancel Order",
+                                    font=("Zain", 12),
+                                    command=np_cancel_order_function)
     number_pizzas_lbl.pack(anchor="n")
     np_how_many_lbl.pack(anchor="center", expand=True)
     np_frm.pack(anchor="center", expand=True)
@@ -294,18 +318,22 @@ def number_pizzas_function():
 
 
 # Pizzas Window Functions
-"""Pizzas Function - submits information, moves onto Summary window"""
+
+
 def p_submit_function():
+    """Pizzas Function - submits information, moves onto Summary window"""
     pass
 
-"""Pizzas Function - cancels order, goes back to order type page"""
+
 def p_cancel_order_function():
+    """Pizzas Function - cancels order, goes back to order type page"""
     pass
 
-"""Pizzas Function - displays pizza choices and adds choices to the order"""
-def pizzas_function():
-    print("Pizzas window")
 
+def pizzas_function():
+    """Pizzas Function - displays pizza choices and adds choices to the
+    order"""
+    pass
 
 
 order_type_function()
