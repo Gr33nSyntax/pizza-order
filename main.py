@@ -320,6 +320,12 @@ def number_pizzas_function():
 # Pizzas Window Functions
 
 
+def p_select_function():
+    """Pizzas Function - selects pizza, adds to order"""
+    dropdown.config(state="disabled")
+    print(selected_option.get())
+
+
 def p_submit_function():
     """Pizzas Function - submits information, moves onto Summary window"""
     pass
@@ -327,13 +333,70 @@ def p_submit_function():
 
 def p_cancel_order_function():
     """Pizzas Function - cancels order, goes back to order type page"""
-    pass
+    pizzas_window.destroy()
+    order_type_function()
 
 
 def pizzas_function():
     """Pizzas Function - displays pizza choices and adds choices to the
     order"""
-    pass
+    global pizzas_window
+    pizzas_window = tk.Tk()
+    pizzas_window.title("Dream Pizzas - Pizzas")
+    pizzas_window.geometry("1200x600")
+    pizzas_window.minsize(1200, 600)
+    pizzas_lbl = tk.Label(master=pizzas_window,
+                          text="Pizzas",
+                          font=("Zain", 32))
+    pizzas_lbl.pack(anchor="n")
+    p_menu_count = 0
+    for pizza, price in PIZZAS.items():
+        p_menu_count += 1
+        p_menu_frm = tk.Frame(master=pizzas_window)
+        p_menu_number_lbl = tk.Label(master=p_menu_frm,
+                                     text=f"{p_menu_count}.",
+                                     font=("Zain", 10))
+        p_menu_pizza_lbl = tk.Label(master=p_menu_frm,
+                                    text=f"{pizza}",
+                                    font=("Zain", 10))
+        p_menu_price_lbl = tk.Label(master=p_menu_frm,
+                                    text=f"(${price})",
+                                    font=("Zain", 10))
+        p_menu_frm.pack(anchor="center", expand=True)
+        p_menu_number_lbl.pack(side="left", padx=5)
+        p_menu_pizza_lbl.pack(side="left", padx=5)
+        p_menu_price_lbl.pack(side="left", padx=5)
+    global number
+    global selected
+    selected = True
+    for number in range(1, number_pizzas + 1):
+        dropdown_frm = tk.Frame(master=pizzas_window)
+        dropdown_pizza_number_lbl = tk.Label(master=dropdown_frm,
+                                             text=f"Pizza {number}:",
+                                             font=("Zain", 18))
+        global selected_option
+        selected_option = tk.StringVar()
+        selected_option.set(list(PIZZAS.keys())[0])
+        global dropdown
+        dropdown = tk.OptionMenu(dropdown_frm, selected_option, *PIZZAS.keys())
+        p_select = tk.Button(master=dropdown_frm,
+                             text="Select",
+                             font=("Zain", 12))
+        dropdown_frm.pack(anchor="center", expand=True)
+        dropdown_pizza_number_lbl.pack(side="left", padx=5)
+        dropdown.pack(side="left", padx=5)
+        p_select.pack(side="left", padx=5)
+    p_submit_btn = tk.Button(master=pizzas_window,
+                             text="Submit",
+                             font=("Zain", 18),
+                             command=p_submit_function)
+    p_cancel_order_btn = tk.Button(master=pizzas_window,
+                                   text="Cancel Order",
+                                   font=("Zain", 12),
+                                   command=p_cancel_order_function)
+    p_submit_btn.pack(anchor="center", expand=True)
+    p_cancel_order_btn.pack(anchor="se", padx=10, pady=10)
+    pizzas_window.mainloop()
 
 
 order_type_function()
