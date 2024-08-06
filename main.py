@@ -1,14 +1,19 @@
 """A program that will a phone operator to input an order for a customer."""
 import tkinter as tk
 from tkinter import ttk
+import os
 
-# Global Variables
+# VARIABLES, LISTS, AND DICTIONARIES
 global saved_orders
 saved_orders = {"order_demo": ["Name",
                                "Address",
                                "Phone",
                                ["Chosen pizza(s) list"],
                                "Total price"]}
+global order
+order = 0
+global total_price
+total_price = 0
 global PIZZAS
 PIZZAS = {"Classic Margherita": 10.50,
           "Pepperoni Delight": 10.50,
@@ -23,19 +28,18 @@ PIZZAS = {"Classic Margherita": 10.50,
           "Lobster & Lemon Zest": 15.50,
           "Pesto & Sun-Dried Tomato Medley": 15.50}
 
-# General Functions
+# GENERAL FUNCTIONS
 
 
 def terminate_program_function():
     """General Function - terminates program"""
-    # Saves orders to a text file
-    with open("saved_orders.txt", "a") as output:
-        for key, value in saved_orders.items():
-            output.write(f"{key}: {value}\n")
+    # Opens saved_orders.txt file
+    os.startfile("saved_orders.txt")
     # Terminates the program
     exit()
 
-# Order Type Functions
+
+# ORDER TYPE FUNCTIONS
 
 
 def ot_pu_function():
@@ -43,7 +47,7 @@ def ot_pu_function():
     # Declares address variable, and sets to "N/A" as it is not needed
     global address
     address = "N/A"
-    # Declares phone_number variable, and sets to "N/A" as it is not 
+    # Declares phone_number variable, and sets to "N/A" as it is not
     # needed
     global phone_number
     phone_number = "N/A"
@@ -60,12 +64,15 @@ def ot_d_function():
     # Calls Delivery window function
     delivery_function()
 
-# Order Type Window
+
+# ORDER TYPE WINDOW
 
 
 def order_type_function():
     """Order Type Function - creates the Order Type window"""
     # Creates window and defines window properties
+    # Makes order_type_window a global variable so it can be accessed
+    # elsewhere
     global order_type_window
     order_type_window = tk.Tk()
     global current_window
@@ -99,7 +106,8 @@ def order_type_function():
     # Runs the window
     order_type_window.mainloop()
 
-# Pick Up Window Functions
+
+# PICK UP WINDOW FUNCTIONS
 
 
 def pu_submit_function():
@@ -114,7 +122,7 @@ def pu_submit_function():
     name_check = name_ent.isspace()
     # Checks if name_ent is not empty and name_check is False
     if len(name_ent) != 0 and name_check is False:
-        # If conditions are met, sets name variable to pu_name_ent 
+        # If conditions are met, sets name variable to pu_name_ent
         # value
         global name
         name = pu_name_ent.get()
@@ -148,7 +156,7 @@ def pick_up_function():
     pu_name_lbl = tk.Label(master=pick_up_window,
                            text="Name:",
                            font=("Zain", 24))
-    # Makes pu_name_ent a global variable so it can be accessed 
+    # Makes pu_name_ent a global variable so it can be accessed
     # elsewhere
     global pu_name_ent
     pu_name_ent = tk.Entry(master=pick_up_window,
@@ -176,10 +184,10 @@ def pick_up_function():
 def d_submit_function():
     """Delivery Function - submits information, moves onto Number of Pizzas
     window"""
-    # Sets total_price to 5 as there is a delivery fee
+    # Adds 3 to total_price as there is a $3 delivery fee
     # Makes total_price a global variable so it can be accessed elsewhere
     global total_price
-    total_price = 5
+    total_price += 3
     # Retrieves values in d_name_ent, d_address_ent, and d_phone_ent entry
     name_ent = d_name_ent.get()
     address_ent = d_address_ent.get()
@@ -231,7 +239,7 @@ def delivery_function():
                             text="Delivery",
                             font=("Zain", 32))
     d_disclaimer_lbl = tk.Label(master=delivery_window,
-                                text="*$5 delivery fee applies",
+                                text="*$3 delivery fee applies",
                                 font=("Zain", 12))
     d_name_frm = tk.Frame(master=delivery_window)
     d_name_lbl = tk.Label(master=d_name_frm,
@@ -402,9 +410,18 @@ def number_pizzas_function():
 
 def p_submit_function():
     """Pizzas Function - submits information, moves onto Summary window"""
+    global chosen_pizzas
     chosen_pizzas = []
     for dropdown_choice in dropboxes:
         chosen_pizzas.append(dropdown_choice.get())
+    global price_list
+    price_list = []
+    global total_price
+    for pizza in chosen_pizzas:
+        price_list.append(PIZZAS[pizza])
+        total_price += PIZZAS[pizza]
+    print(chosen_pizzas)
+    print(price_list)
     print(total_price)
     pizzas_window.destroy()
     summary_function()
@@ -491,8 +508,126 @@ def pizzas_function():
 # Summary Window Functions
 
 
+def s_cancel_order_function():
+    """Summary Function - cancels order, goes back to Order Type window"""
+    summary_window.destroy()
+    order_type_function()
+
+
+def s_confirm_order_function():
+    """Summary Function - confirms order, restarts order by opening
+    Order Type window"""
+    global order
+    order += 1
+    saved_orders[f"order_{order}"] = [name,
+                                      address,
+                                      phone_number,
+                                      chosen_pizzas,
+                                      total_price]
+    with open("saved_orders.txt", "a", encoding="utf-8") as output:
+        for key, value in saved_orders.items():
+            output.write(f"{key}: {value}\n")
+    summary_window.destroy()
+    order_type_function()
+
+
 def summary_function():
-    pass
+    """Summary Function - creates Summary window"""
+    # Creates window and defines window properties
+    # Makes summary_window a global variable so it can be accessed elsewhere
+    global summary_window
+    summary_window = tk.Tk()
+    summary_window.title("Dream Pizzas - Summary")
+    summary_window.geometry("400x600")
+    summary_window.minsize(800, 400)
+    # Creates summary_lbl, s_name_lbl, s_name_data_lbl, and s_pizzas_lbl
+    # and defines widget propoerties
+    summary_lbl = tk.Label(master=summary_window,
+                           text="Summary",
+                           font=("Zain", 32))
+    s_name_lbl = tk.Label(master=summary_window,
+                          text="Name:",
+                          font=("Zain", 24))
+    s_name_data_lbl = tk.Label(master=summary_window,
+                               text=f"{name}",
+                               font=("Zain", 18))
+    s_pizzas_lbl = tk.Label(master=summary_window,
+                            text="Pizzas:",
+                            font=("Zain", 24))
+    # Packs summary_lbl, s_name_lbl, and s_name_data_lbl, s_pizzas_lbl
+    # widgets and defines widget placement
+    summary_lbl.pack(anchor="n")
+    s_name_lbl.pack(anchor="center", expand=True)
+    s_name_data_lbl.pack(anchor="center", expand=True)
+    s_pizzas_lbl.pack(anchor="center", expand=True)
+    for pizza in chosen_pizzas:
+        # Loops through chosen_pizzas list and creates s_pizzas_frm,
+        # s_pizzas_data_lbl, and s_pizza_price_data_lbl widgets for
+        # each pizza in the list and defines widget properties
+        s_pizzas_frm = tk.Frame(master=summary_window)
+        s_pizzas_data_lbl = tk.Label(master=s_pizzas_frm,
+                                     text=pizza,
+                                     font=("Zain", 18))
+        s_pizza_price_data_lbl = tk.Label(master=s_pizzas_frm,
+                                          text=f"(${PIZZAS[pizza]})",
+                                          font=("Zain", 18))
+        # Packs s_pizzas_frm, s_pizzas_data_lbl, and s_pizza_price_data_lbl
+        # widgets and defines widget placement
+        s_pizzas_frm.pack(anchor="center", expand=True)
+        s_pizzas_data_lbl.pack(side="left", padx=5)
+        s_pizza_price_data_lbl.pack(side="left", padx=5)
+    # Creates s_address_lbl, s_address_data_lbl, s_phone_lbl,
+    # s_phone_data_lbl, s_total_lbl, s_total_data_lbl, s_btn_frm,
+    # s_cancel_order_btn, s_confirm_order_btn, and s_sign_out_btn
+    # widgets and defines properties
+    s_address_lbl = tk.Label(master=summary_window,
+                             text="Address:",
+                             font=("Zain", 24))
+    s_address_data_lbl = tk.Label(master=summary_window,
+                                  text=address,
+                                  font=("Zain", 18))
+    s_phone_lbl = tk.Label(master=summary_window,
+                           text="Phone Number:",
+                           font=("Zain", 24))
+    s_phone_data_lbl = tk.Label(master=summary_window,
+                                text=phone_number,
+                                font=("Zain", 18))
+    s_total_lbl = tk.Label(master=summary_window,
+                           text="Total Price:",
+                           font=("Zain", 24))
+    s_total_data_lbl = tk.Label(master=summary_window,
+                                text=total_price,
+                                font=("Zain", 18))
+    s_btn_frm = tk.Frame(master=summary_window)
+    # Assigns buttons to s_btn_frm
+    s_cancel_order_btn = tk.Button(master=s_btn_frm,
+                                   text="Cancel Order",
+                                   font=("Zain", 12),
+                                   command=s_cancel_order_function)
+    s_confirm_order_btn = tk.Button(master=s_btn_frm,
+                                    text="Confirm Order",
+                                    font=("Zain", 12),
+                                    command=s_confirm_order_function)
+    s_sign_out_btn = tk.Button(master=s_btn_frm,
+                               text="Sign Out",
+                               font=("Zain", 12),
+                               command=terminate_program_function)
+    # Packs s_address_lbl, s_address_data_lbl, s_phone_lbl, s_phone_data_lbl,
+    # s_total_lbl, s_total_data_lbl, s_btn_frm, s_cancel_order_btn,
+    # s_confirm_order_btn, and s_sign_out_btn widgets and defines widget
+    # placement
+    s_address_lbl.pack(anchor="center", expand=True)
+    s_address_data_lbl.pack(anchor="center", expand=True)
+    s_phone_lbl.pack(anchor="center", expand=True)
+    s_phone_data_lbl.pack(anchor="center", expand=True)
+    s_total_lbl.pack(anchor="center", expand=True)
+    s_total_data_lbl.pack(anchor="center", expand=True)
+    s_btn_frm.pack(anchor="center", expand=True)
+    s_cancel_order_btn.pack(side="left", padx=5)
+    s_confirm_order_btn.pack(side="left", padx=5)
+    s_sign_out_btn.pack(side="left", padx=5)
+    # Runs the window
+    summary_window.mainloop()
 
 
 order_type_function()
