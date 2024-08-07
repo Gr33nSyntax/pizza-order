@@ -39,6 +39,13 @@ PIZZAS = {"Classic Margherita": 10.50,
           "Fig & Goat Cheese Fantasy": 15.50,
           "Lobster & Lemon Zest": 15.50,
           "Pesto & Sun-Dried Tomato Medley": 15.50}
+# BG variable - variable which stores the background colour. Uppercase
+# because it is a constant variable.
+BG = "#b3c7f7"
+# FG variable - a variable which stores the foreground colour. Uppercase
+# because it is a constant variable.
+FG = "#1b1b1e"
+
 
 # GENERAL FUNCTIONS
 
@@ -105,27 +112,34 @@ def order_type_function():
     # elsewhere
     global order_type_window
     order_type_window = tk.Tk()
-    global current_window
-    current_window = order_type_window
     order_type_window.title("Dream Pizzas - Order Type")
+    order_type_window.configure(bg=BG)
     order_type_window.geometry("500x300")
     order_type_window.minsize(500, 300)
     # Creates widgets and defines widget properties
     order_type_lbl = tk.Label(master=order_type_window,
                               text="Order Type",
+                              bg=BG,
+                              fg=FG,
                               font=H1)
     ot_pickup_btn = tk.Button(master=order_type_window,
                               text="Pickup",
+                              bg=BG,
+                              fg=FG,
                               font=H2,
                               width=10,
                               command=ot_pu_function)
     ot_delivery_btn = tk.Button(master=order_type_window,
                                 text="Delivery",
+                                bg=BG,
+                                fg=FG,
                                 font=H2,
                                 width=10,
                                 command=ot_d_function)
     ot_exit_btn = tk.Button(master=order_type_window,
                             text="Exit",
+                            bg=BG,
+                            fg=FG,
                             font=S1,
                             command=terminate_program_function)
     # Packs widgets and defines widget placement
@@ -177,26 +191,37 @@ def pick_up_function():
     global pick_up_window
     pick_up_window = tk.Tk()
     pick_up_window.title("Dream Pizzas - Pick Up")
+    pick_up_window.configure(bg=BG)
     pick_up_window.geometry("500x300")
     pick_up_window.minsize(500, 300)
     # Creates widgets and defines widget properties
     pick_up_lbl = tk.Label(master=pick_up_window,
                            text="Pick Up",
+                           bg=BG,
+                           fg=FG,
                            font=H1)
     pu_name_lbl = tk.Label(master=pick_up_window,
                            text="Name:",
+                           bg=BG,
+                           fg=FG,
                            font=H2)
     # Makes pu_name_ent a global variable so it can be accessed
     # elsewhere
     global pu_name_ent
     pu_name_ent = tk.Entry(master=pick_up_window,
+                           bg=BG,
+                           fg=FG,
                            font=H3)
     pu_submit_btn = tk.Button(master=pick_up_window,
                               text="Submit",
+                              bg=BG,
+                              fg=FG,
                               font=H2,
                               command=pu_submit_function)
     pu_cancel_order_btn = tk.Button(master=pick_up_window,
                                     text="Cancel Order",
+                                    bg=BG,
+                                    fg=FG,
                                     font=S1,
                                     command=pu_cancel_order_function)
     # Packs widgets and defines widget placement
@@ -258,44 +283,68 @@ def delivery_function():
     global delivery_window
     delivery_window = tk.Tk()
     delivery_window.title("Dream Pizzas - Delivery")
+    delivery_window.configure(bg=BG)
     delivery_window.geometry("800x400")
     delivery_window.minsize(800, 400)
     # Creates widgets and defines widget properties
     delivery_lbl = tk.Label(master=delivery_window,
                             text="Delivery",
+                            bg=BG,
+                            fg=FG,
                             font=H1)
     d_disclaimer_lbl = tk.Label(master=delivery_window,
+                                bg=BG,
+                                fg=FG,
                                 text="*$3 delivery fee applies",
                                 font=S1)
-    d_name_frm = tk.Frame(master=delivery_window)
+    d_name_frm = tk.Frame(master=delivery_window,
+                          bg=BG)
     d_name_lbl = tk.Label(master=d_name_frm,
                           text="Name:",
+                          bg=BG,
+                          fg=FG,
                           font=H2)
     # Makes d_name_ent a global variable so it can be accessed elsewhere
     global d_name_ent
     d_name_ent = tk.Entry(master=d_name_frm,
+                          bg=BG,
+                          fg=FG,
                           font=H3)
-    d_address_frm = tk.Frame(master=delivery_window)
+    d_address_frm = tk.Frame(master=delivery_window,
+                             bg=BG)
     d_address_lbl = tk.Label(master=d_address_frm,
+                             bg=BG,
+                             fg=FG,
                              text="Address:",
                              font=H2)
     # Makes d_address_ent a global variable so it can be accessed elsewhere
     global d_address_ent
     d_address_ent = tk.Entry(master=d_address_frm,
+                             bg=BG,
+                             fg=FG,
                              font=H3)
-    d_phone_frm = tk.Frame(master=delivery_window)
+    d_phone_frm = tk.Frame(master=delivery_window,
+                           bg=BG)
     d_phone_lbl = tk.Label(master=d_phone_frm,
+                           bg=BG,
+                           fg=FG,
                            text="Phone:",
                            font=H2)
     # Makes d_phone_ent a global variable so it can be accessed elsewhere
     global d_phone_ent
     d_phone_ent = tk.Entry(master=d_phone_frm,
+                           bg=BG,
+                           fg=FG,
                            font=H3)
     d_submit_btn = tk.Button(master=delivery_window,
                              text="Submit",
+                             bg=BG,
+                             fg=FG,
                              font=H2,
                              command=d_submit_function)
     d_cancel_order_btn = tk.Button(master=delivery_window,
+                                   bg=BG,
+                                   fg=FG,
                                    text="Cancel Order",
                                    font=S1,
                                    command=d_cancel_order_function)
@@ -378,17 +427,25 @@ def number_pizzas_function():
     global number_pizzas_window
     number_pizzas_window = tk.Tk()
     number_pizzas_window.title("Dream Pizzas - Number of Pizzas")
+    number_pizzas_window.configure(bg=BG)
     number_pizzas_window.geometry("800x400")
     number_pizzas_window.minsize(800, 400)
     # Creates widgets and defines widget properties
     number_pizzas_lbl = tk.Label(master=number_pizzas_window,
+                                 bg=BG,
+                                 fg=FG,
                                  text="Number of Pizzas",
                                  font=H1)
     np_how_many_lbl = tk.Label(master=number_pizzas_window,
+                               bg=BG,
+                               fg=FG,
                                text="How many pizzas?",
                                font=H2)
-    np_frm = tk.Frame(master=number_pizzas_window)
+    np_frm = tk.Frame(master=number_pizzas_window,
+                      bg=BG)
     np_decrease_btn = tk.Button(master=np_frm,
+                                bg=BG,
+                                fg=FG,
                                 text="-",
                                 font=("Zain"),
                                 command=np_decrease_function,
@@ -396,6 +453,8 @@ def number_pizzas_function():
     # Makes np_number_ent a global variable so it can be accessed elsewhere
     global np_number_ent
     np_number_ent = tk.Entry(master=np_frm,
+                             bg=BG,
+                             fg=FG,
                              font=("Zain"),
                              width=4,
                              justify="center")
@@ -406,15 +465,21 @@ def number_pizzas_function():
     np_number_ent.insert(0, 1)
     np_number_ent.config(state="disabled")
     np_increase_btn = tk.Button(master=np_frm,
+                                bg=BG,
+                                fg=FG,
                                 text="+",
                                 font=("Zain"),
                                 command=np_increase_function,
                                 width=2)
     np_submit_btn = tk.Button(master=number_pizzas_window,
+                              bg=BG,
+                              fg=FG,
                               text="Submit",
                               font=H2,
                               command=np_submit_function)
     np_cancel_order_btn = tk.Button(master=number_pizzas_window,
+                                    bg=BG,
+                                    fg=FG,
                                     text="Cancel Order",
                                     font=S1,
                                     command=np_cancel_order_function)
@@ -464,10 +529,13 @@ def pizzas_function():
     global pizzas_window
     pizzas_window = tk.Tk()
     pizzas_window.title("Dream Pizzas - Pizzas")
+    pizzas_window.configure(bg=BG)
     pizzas_window.geometry("1200x600")
     pizzas_window.minsize(1200, 600)
     # Creates pizzas_lbl widget, defines properties, and packs widget
     pizzas_lbl = tk.Label(master=pizzas_window,
+                          bg=BG,
+                          fg=FG,
                           text="Pizzas",
                           font=H1)
     pizzas_lbl.pack(anchor="n")
@@ -479,14 +547,21 @@ def pizzas_function():
         p_menu_count += 1
         # Creates p_menu_frm, p_menu_number_lbl, p_menu_pizza_lbl, and
         # p_menu_price_lbl widgets and defines properties
-        p_menu_frm = tk.Frame(master=pizzas_window)
+        p_menu_frm = tk.Frame(master=pizzas_window,
+                              bg=BG)
         p_menu_number_lbl = tk.Label(master=p_menu_frm,
+                                     bg=BG,
+                                     fg=FG,
                                      text=f"{p_menu_count}.",
                                      font=("Zain", 10))
         p_menu_pizza_lbl = tk.Label(master=p_menu_frm,
+                                    bg=BG,
+                                    fg=FG,
                                     text=f"{pizza}",
                                     font=("Zain", 10))
         p_menu_price_lbl = tk.Label(master=p_menu_frm,
+                                    bg=BG,
+                                    fg=FG,
                                     text=f"(${price})",
                                     font=("Zain", 10))
         # Packs widgets and defines widget placement
@@ -503,9 +578,12 @@ def pizzas_function():
     for number in range(1, number_pizzas + 1):
         # Creates dropdown_frm, dropdown_pizza_number_lbl, and dropdown_choice
         # widgets and defines properties
-        dropdown_frm = tk.Frame(master=pizzas_window)
+        dropdown_frm = tk.Frame(master=pizzas_window,
+                                bg=BG)
         dropdown_pizza_number_lbl = tk.Label(master=dropdown_frm,
                                              text=f"Pizza {number}:",
+                                             bg=BG,
+                                             fg=FG,
                                              font=H3)
         dropdown_choice = ttk.Combobox(dropdown_frm,
                                        values=list(PIZZAS.keys()),
@@ -517,10 +595,14 @@ def pizzas_function():
         dropdown_pizza_number_lbl.pack(side="left", padx=5)
         dropdown_choice.pack(side="left", padx=5)
     p_submit_btn = tk.Button(master=pizzas_window,
+                             bg=BG,
+                             fg=FG,
                              text="Submit",
                              font=H2,
                              command=p_submit_function)
     p_cancel_order_btn = tk.Button(master=pizzas_window,
+                                   bg=BG,
+                                   fg=FG,
                                    text="Cancel Order",
                                    font=S1,
                                    command=p_cancel_order_function)
@@ -558,20 +640,29 @@ def summary_function():
     global summary_window
     summary_window = tk.Tk()
     summary_window.title("Dream Pizzas - Summary")
+    summary_window.configure(bg=BG)
     summary_window.geometry("400x600")
     summary_window.minsize(800, 400)
     # Creates summary_lbl, s_name_lbl, s_name_data_lbl, and s_pizzas_lbl
     # and defines widget propoerties
     summary_lbl = tk.Label(master=summary_window,
+                           bg=BG,
+                           fg=FG,
                            text="Summary",
                            font=H1)
     s_name_lbl = tk.Label(master=summary_window,
+                          bg=BG,
+                          fg=FG,
                           text="Name:",
                           font=H2)
     s_name_data_lbl = tk.Label(master=summary_window,
+                               bg=BG,
+                               fg=FG,
                                text=f"{name}",
                                font=H3)
     s_pizzas_lbl = tk.Label(master=summary_window,
+                            bg=BG,
+                            fg=FG,
                             text="Pizzas:",
                             font=H2)
     # Packs summary_lbl, s_name_lbl, and s_name_data_lbl, s_pizzas_lbl
@@ -584,11 +675,16 @@ def summary_function():
         # Loops through chosen_pizzas list and creates s_pizzas_frm,
         # s_pizzas_data_lbl, and s_pizza_price_data_lbl widgets for
         # each pizza in the list and defines widget properties
-        s_pizzas_frm = tk.Frame(master=summary_window)
+        s_pizzas_frm = tk.Frame(master=summary_window,
+                                bg=BG)
         s_pizzas_data_lbl = tk.Label(master=s_pizzas_frm,
+                                     bg=BG,
+                                     fg=FG,
                                      text=pizza,
                                      font=H3)
         s_pizza_price_data_lbl = tk.Label(master=s_pizzas_frm,
+                                          bg=BG,
+                                          fg=FG,
                                           text=f"(${PIZZAS[pizza]})",
                                           font=H3)
         # Packs s_pizzas_frm, s_pizzas_data_lbl, and s_pizza_price_data_lbl
@@ -601,36 +697,55 @@ def summary_function():
     # s_cancel_order_btn, s_confirm_order_btn, and s_sign_out_btn
     # widgets and defines properties
     s_address_lbl = tk.Label(master=summary_window,
+                             bg=BG,
+                             fg=FG,
                              text="Address:",
                              font=H2)
     s_address_data_lbl = tk.Label(master=summary_window,
+                                  bg=BG,
+                                  fg=FG,
                                   text=address,
                                   font=H3)
     s_phone_lbl = tk.Label(master=summary_window,
+                           bg=BG,
+                           fg=FG,
                            text="Phone Number:",
                            font=H2)
     s_phone_data_lbl = tk.Label(master=summary_window,
+                                bg=BG,
+                                fg=FG,
                                 text=phone_number,
                                 font=H3)
     s_total_lbl = tk.Label(master=summary_window,
+                           bg=BG,
+                           fg=FG,
                            text="Total Price:",
                            font=H2)
     s_total_data_lbl = tk.Label(master=summary_window,
+                                bg=BG,
+                                fg=FG,
                                 text=total_price,
                                 font=H3)
-    s_btn_frm = tk.Frame(master=summary_window)
+    s_btn_frm = tk.Frame(master=summary_window,
+                         bg=BG)
     if delivery_fee_applied is True:
         s_total_data_lbl.config(text=f"{total_price} incl. $3 delivery fee")
     # Assigns buttons to s_btn_frm
     s_cancel_order_btn = tk.Button(master=s_btn_frm,
+                                   bg=BG,
+                                   fg=FG,
                                    text="Cancel Order",
                                    font=S1,
                                    command=s_cancel_order_function)
     s_confirm_order_btn = tk.Button(master=s_btn_frm,
+                                    bg=BG,
+                                    fg=FG,
                                     text="Confirm Order",
                                     font=S1,
                                     command=s_confirm_order_function)
     s_sign_out_btn = tk.Button(master=s_btn_frm,
+                               bg=BG,
+                               fg=FG,
                                text="Sign Out",
                                font=S1,
                                command=terminate_program_function)
