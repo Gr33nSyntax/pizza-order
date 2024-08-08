@@ -54,6 +54,7 @@ def terminate_program_function():
     """General Function - terminates program"""
     # Saves orders to saved_orders.txt file
     with open("saved_orders.txt", "a", encoding="utf-8") as output:
+        output.write("\n")
         for key, value in saved_orders.items():
             output.write(f"{key}: {value}\n")
     # Opens saved_orders.txt file
@@ -67,6 +68,9 @@ def terminate_program_function():
 
 def ot_pu_function():
     """Order Type Function - submits information, moves onto Pickup window"""
+    # Declares total_price variable, and sets to 0 as no delivery fee
+    global total_price
+    total_price = 0
     # Declares delivery_fee_applied variable, and sets to False as there is
     # no delivery fee.
     # Makes delivery_fee_applied a global variable so it can be accessed
@@ -90,12 +94,14 @@ def ot_pu_function():
 
 def ot_d_function():
     """Order Type Function - moves onto Delivery window"""
-    global delivery_fee_applied
-    delivery_fee_applied = True
     # Sets total_price to $3 as there is a delivery fee
     # Makes total_price a global variable so it can be accessed elsewhere
     global total_price
     total_price = 3
+    # Declares delivery_fee_applied variable, and sets to True as there is
+    # a delivery fee
+    global delivery_fee_applied
+    delivery_fee_applied = True
     # Destroys Order Type window
     order_type_window.destroy()
     # Calls Delivery window function
@@ -157,9 +163,6 @@ def order_type_function():
 def pu_submit_function():
     """Pick Up Function - submits information, moves onto Number of Pizzas
     window."""
-    # Declares total_price variable, and sets to 0 as no delivery fee
-    global total_price
-    total_price = 0
     # Retrieves value in pu_name_ent entry widget
     name_ent = pu_name_ent.get()
     # Checks if name_ent is only whitespace
@@ -209,7 +212,6 @@ def pick_up_function():
     # elsewhere
     global pu_name_ent
     pu_name_ent = tk.Entry(master=pick_up_window,
-                           bg=BG,
                            fg=FG,
                            font=H3)
     pu_submit_btn = tk.Button(master=pick_up_window,
@@ -307,7 +309,6 @@ def delivery_function():
     # Makes d_name_ent a global variable so it can be accessed elsewhere
     global d_name_ent
     d_name_ent = tk.Entry(master=d_name_frm,
-                          bg=BG,
                           fg=FG,
                           font=H3)
     d_address_frm = tk.Frame(master=delivery_window,
@@ -320,7 +321,6 @@ def delivery_function():
     # Makes d_address_ent a global variable so it can be accessed elsewhere
     global d_address_ent
     d_address_ent = tk.Entry(master=d_address_frm,
-                             bg=BG,
                              fg=FG,
                              font=H3)
     d_phone_frm = tk.Frame(master=delivery_window,
@@ -333,7 +333,6 @@ def delivery_function():
     # Makes d_phone_ent a global variable so it can be accessed elsewhere
     global d_phone_ent
     d_phone_ent = tk.Entry(master=d_phone_frm,
-                           bg=BG,
                            fg=FG,
                            font=H3)
     d_submit_btn = tk.Button(master=delivery_window,
@@ -505,11 +504,8 @@ def p_submit_function():
     chosen_pizzas = []
     for dropdown_choice in dropboxes:
         chosen_pizzas.append(dropdown_choice.get())
-    global price_list
-    price_list = []
     global total_price
     for pizza in chosen_pizzas:
-        price_list.append(PIZZAS[pizza])
         total_price += PIZZAS[pizza]
     pizzas_window.destroy()
     summary_function()
@@ -553,17 +549,17 @@ def pizzas_function():
                                      bg=BG,
                                      fg=FG,
                                      text=f"{p_menu_count}.",
-                                     font=("Zain", 10))
+                                     font=S1)
         p_menu_pizza_lbl = tk.Label(master=p_menu_frm,
                                     bg=BG,
                                     fg=FG,
                                     text=f"{pizza}",
-                                    font=("Zain", 10))
+                                    font=S1)
         p_menu_price_lbl = tk.Label(master=p_menu_frm,
                                     bg=BG,
                                     fg=FG,
                                     text=f"(${price})",
-                                    font=("Zain", 10))
+                                    font=S1)
         # Packs widgets and defines widget placement
         p_menu_frm.pack(anchor="center", expand=True)
         p_menu_number_lbl.pack(side="left", padx=5)
@@ -589,11 +585,17 @@ def pizzas_function():
                                        values=list(PIZZAS.keys()),
                                        state="readonly",
                                        width=35)
+        # Sets the default value of the dropdown to the first pizza in the
+        # PIZZAS dictionary
         dropdown_choice.set(list(PIZZAS.keys())[0])
         dropboxes.append(dropdown_choice)
+        # Packs dropdown_frm, dropdown_pizza_number, and dropdown_choice
+        # widgets and defines widget placement
         dropdown_frm.pack(anchor="center", expand=True)
         dropdown_pizza_number_lbl.pack(side="left", padx=5)
         dropdown_choice.pack(side="left", padx=5)
+    # Creates p_submit_btn and p_cancel_order_btn widgets and defines
+    # widget properties
     p_submit_btn = tk.Button(master=pizzas_window,
                              bg=BG,
                              fg=FG,
@@ -606,8 +608,11 @@ def pizzas_function():
                                    text="Cancel Order",
                                    font=S1,
                                    command=p_cancel_order_function)
+    # Packs p_submit_btn and p_cancel_order_btn widgets and defines widget
+    # placement
     p_submit_btn.pack(anchor="center", expand=True)
     p_cancel_order_btn.pack(anchor="se", padx=10, pady=10)
+    # Runs the window
     pizzas_window.mainloop()
 
 # Summary Window Functions
@@ -765,6 +770,8 @@ def summary_function():
     s_sign_out_btn.pack(side="left", padx=5)
     # Runs the window
     summary_window.mainloop()
+
+# Runs program
 
 
 order_type_function()
