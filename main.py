@@ -500,20 +500,31 @@ def number_pizzas_function():
 
 def p_submit_function():
     """Pizzas Function - submits information, moves onto Summary window"""
+    # Creates chosen_pizzas list and makes it a global variable so it can be
+    # accessed elsewhere
     global chosen_pizzas
     chosen_pizzas = []
-    for dropdown_choice in dropboxes:
+    # Iterates through dropdowns_list and appends the value of each dropdown to
+    # chosen_pizzas list
+    for dropdown_choice in dropdowns_list:
         chosen_pizzas.append(dropdown_choice.get())
+    # Makes total_price a global variable so it can be accessed elsewhere
     global total_price
+    # Iterates through chosen_pizzas list and adds the price of each pizza to
+    # total_price
     for pizza in chosen_pizzas:
         total_price += PIZZAS[pizza]
+    # Destroys Pizzas window
     pizzas_window.destroy()
+    # Calls Summary window function
     summary_function()
 
 
 def p_cancel_order_function():
     """Pizzas Function - cancels order, goes back to order type page"""
+    # Destroys Pizzas window
     pizzas_window.destroy()
+    # Calls Order Type window function
     order_type_function()
 
 
@@ -565,10 +576,10 @@ def pizzas_function():
         p_menu_number_lbl.pack(side="left", padx=5)
         p_menu_pizza_lbl.pack(side="left", padx=5)
         p_menu_price_lbl.pack(side="left", padx=5)
-    # Creates dropboxes list, makes it a global variable so it can be
+    # Creates dropdowns_list list, makes it a global variable so it can be
     # accessed elsewhere
-    global dropboxes
-    dropboxes = []
+    global dropdowns_list
+    dropdowns_list = []
     # Loops through to meet the number of pizzas the user wants to order
     # and create a dropdown for each pizza to be chosen.
     for number in range(1, number_pizzas + 1):
@@ -588,7 +599,7 @@ def pizzas_function():
         # Sets the default value of the dropdown to the first pizza in the
         # PIZZAS dictionary
         dropdown_choice.set(list(PIZZAS.keys())[0])
-        dropboxes.append(dropdown_choice)
+        dropdowns_list.append(dropdown_choice)
         # Packs dropdown_frm, dropdown_pizza_number, and dropdown_choice
         # widgets and defines widget placement
         dropdown_frm.pack(anchor="center", expand=True)
@@ -620,7 +631,9 @@ def pizzas_function():
 
 def s_cancel_order_function():
     """Summary Function - cancels order, goes back to Order Type window"""
+    # Destroys Summary window
     summary_window.destroy()
+    # Calls Order Type window function
     order_type_function()
 
 
@@ -628,13 +641,19 @@ def s_confirm_order_function():
     """Summary Function - confirms order, restarts order by opening
     Order Type window"""
     global order
+    # Adds 1 to order
     order += 1
+    # Creates saved_orders dictionary key and assigns name variable, address
+    # variable, phone_number variable, chosen_pizzas list, and total_price
+    # variable as the value to the key
     saved_orders[f"order_{order}"] = [name,
                                       address,
                                       phone_number,
                                       chosen_pizzas,
                                       total_price]
+    # Destroys Summary window
     summary_window.destroy()
+    # Calls Order Type window function
     order_type_function()
 
 
@@ -677,7 +696,7 @@ def summary_function():
     s_name_data_lbl.pack(anchor="center", expand=True)
     s_pizzas_lbl.pack(anchor="center", expand=True)
     for pizza in chosen_pizzas:
-        # Loops through chosen_pizzas list and creates s_pizzas_frm,
+        # Iterates through chosen_pizzas list and creates s_pizzas_frm,
         # s_pizzas_data_lbl, and s_pizza_price_data_lbl widgets for
         # each pizza in the list and defines widget properties
         s_pizzas_frm = tk.Frame(master=summary_window,
