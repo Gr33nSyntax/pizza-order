@@ -52,15 +52,22 @@ FG = "#1b1b1e"
 
 def terminate_program_function():
     """General Function - terminates program"""
-    # Saves orders to saved_orders.txt file
-    with open("saved_orders.txt", "a", encoding="utf-8") as output:
-        output.write("\n")
-        for key, value in saved_orders.items():
-            output.write(f"{key}: {value}\n")
-    # Opens saved_orders.txt file
-    os.startfile("saved_orders.txt")
-    # Terminates the program
-    exit()
+    try:
+        # Saves orders to saved_orders.txt file
+        with open("saved_orders.txt", "a", encoding="utf-8") as output:
+            output.write("\n")
+            for key, value in saved_orders.items():
+                output.write(f"{key}: {value}\n")
+        # Opens saved_orders.txt file
+        os.startfile("saved_orders.txt")
+        # Terminates the program
+        exit()
+    # Checks for a PermissionError
+    except PermissionError:
+        # Prints error message
+        print("Error saving orders to file.")
+        # Terminates the program
+        exit()
 
 
 # ORDER TYPE FUNCTIONS
