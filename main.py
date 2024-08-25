@@ -10,6 +10,11 @@ H1 = ("Zain", 32)
 H2 = ("Zain", 24)
 H3 = ("Zain", 18)
 S1 = ("Zain", 12)
+# MAX_PIZZAS and MIN_PIZZAS variables - used to store the maximum and minimum
+# number of pizzas that can be ordered. Uppercase because it is a constant
+# variable.
+MAX_PIZZAS = 5
+MIN_PIZZAS = 1
 # saved_orders dictionary - provides a demo to allow the phone operator to
 # understand how the data is being laid out/displayed.
 global saved_orders
@@ -171,15 +176,13 @@ def pu_submit_function():
     """Pick Up Function - submits information, moves onto Number of Pizzas
     window."""
     # Retrieves value in pu_name_ent entry widget
-    name_ent = pu_name_ent.get()
-    # Checks if name_ent is only whitespace
-    name_check = name_ent.isspace()
+    name_ent = (pu_name_ent.get()).strip(" ")
     # Checks if name_ent is not empty and name_check is False
-    if len(name_ent) != 0 and name_check is False:
+    if len(name_ent) != 0 and name_ent.isnumeric() is False:
         # If conditions are met, sets name variable to pu_name_ent
         # value
         global name
-        name = pu_name_ent.get()
+        name = name_ent
         # Destroys Pick Up window
         pick_up_window.destroy()
         # Calls Number of Pizzas window function
@@ -249,28 +252,26 @@ def d_submit_function():
     """Delivery Function - submits information, moves onto Number of Pizzas
     window"""
     # Retrieves values in d_name_ent, d_address_ent, and d_phone_ent entry
-    name_ent = d_name_ent.get()
-    address_ent = d_address_ent.get()
-    phone_ent = d_phone_ent.get()
-    # Checks if name_ent, address_ent, and phone_ent are only whitespace
-    name_ent_check = name_ent.isspace()
-    address_ent_check = address_ent.isspace()
-    phone_ent_check = phone_ent.isspace()
+    # widgets and strips any pre or post whitespace
+    name_ent = (d_name_ent.get()).strip(" ")
+    address_ent = (d_address_ent.get()).strip(" ")
+    phone_ent = (d_phone_ent.get()).strip(" ")
     # Checks if name_ent, address_ent, and phone_ent are not empty and
-    # name_ent_check, address_ent_check, and phone_ent_check are False
-    if (len(name_ent) != 0 and name_ent_check is False
-            and len(address_ent) != 0 and address_ent_check is False
-            and len(phone_ent) != 0 and phone_ent_check is False):
+    # checks that name_ent and address_ent are strings and phone_ent is
+    # a number
+    if (len(name_ent) != 0 and len(address_ent) != 0 and len(phone_ent) != 0
+            and name_ent.isnumeric() is False and address_ent.isnumeric() is
+            False and phone_ent.isnumeric() is True):
         # If conditions are met, sets name, address, and phone_number variables
         # to d_name_ent, d_address_ent, and d_phone_ent values.
         # Makes name, address, and phone_number global variables so they can be
         # accessed elsewhere
         global name
-        name = d_name_ent.get()
+        name = name_ent
         global address
-        address = d_address_ent.get()
+        address = address_ent
         global phone_number
-        phone_number = d_phone_ent.get()
+        phone_number = phone_ent
         # Destroys Delivery window
         delivery_window.destroy()
         # Calls Number of Pizzas window function
@@ -378,8 +379,8 @@ def np_increase_function():
     """Number of Pizzas Function - adds 1 to the quantity of pizzas wanted"""
     # Retrieves value in np_number_ent entry widget
     number = int(np_number_ent.get())
-    # Checks if number is greater than or equal to 1 and less than 5
-    if number >= 1 and number < 5:
+    # Checks if number is less than MAX_PIZZAS
+    if number < MAX_PIZZAS:
         # If conditions are met, sets np_number_ent value to number + 1
         np_number_ent.config(state="normal")
         np_number_ent.delete(0, tk.END)
@@ -393,8 +394,8 @@ def np_decrease_function():
     wanted"""
     # Retrieves value in np_number_ent entry widget
     number = int(np_number_ent.get())
-    # Checks if number is greater than 1 and less than or equal to 5
-    if number > 1 and number <= 5:
+    # Checks if number is greater than MIN_PIZZAS
+    if number > MIN_PIZZAS:
         # If conditions are met, sets np_number_ent value to number - 1
         np_number_ent.config(state="normal")
         np_number_ent.delete(0, tk.END)
