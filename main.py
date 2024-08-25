@@ -4,34 +4,29 @@ from tkinter import ttk
 import os
 
 # VARIABLES, LISTS, AND DICTIONARIES
-# H1, H2, H3, and H4 variables - used to store the sizes and fonts of the
-# text types. Uppercase because they are constant variables.
+# H1, H2, H3, and H4 variables - used to store the sizes and fonts.
 H1 = ("Zain", 32)
 H2 = ("Zain", 24)
 H3 = ("Zain", 18)
 S1 = ("Zain", 12)
 # MAX_PIZZAS and MIN_PIZZAS variables - used to store the maximum and minimum
-# number of pizzas that can be ordered. Uppercase because it is a constant
-# variable.
+# number of pizzas that can be ordered.
 MAX_PIZZAS = 5
 MIN_PIZZAS = 1
+# DELIVERY_FEE variable - used to store the delivery fee.
+DELIVERY_FEE = 3
 # saved_orders dictionary - provides a demo to allow the phone operator to
 # understand how the data is being laid out/displayed.
-global saved_orders
 saved_orders = {"order_demo": ["Name",
                                "Address",
                                "Phone",
                                ["Chosen pizza(s) list"],
                                "Total price"]}
-# order variable - keeps track of the order number to allow it to be saved
-global order
+# order variable - keeps track of the order number.
 order = 0
-# total_price variable - keeps track of the total price of the order
-global total_price
+# total_price variable - keeps track of the total price of the order.
 total_price = 0
 # PIZZAS variable - dictionary that contains the pizza names and prices.
-# Uppercase because it is a constant variable.
-global PIZZAS
 PIZZAS = {"Classic Margherita": 10.50,
           "Pepperoni Delight": 10.50,
           "Veggie Supreme": 10.50,
@@ -44,11 +39,9 @@ PIZZAS = {"Classic Margherita": 10.50,
           "Fig & Goat Cheese Fantasy": 15.50,
           "Lobster & Lemon Zest": 15.50,
           "Pesto & Sun-Dried Tomato Medley": 15.50}
-# BG variable - variable which stores the background colour. Uppercase
-# because it is a constant variable.
+# BG variable - variable which stores the background colour.
 BG = "#b3c7f7"
-# FG variable - a variable which stores the foreground colour. Uppercase
-# because it is a constant variable.
+# FG variable - a variable which stores the foreground colour.
 FG = "#1b1b1e"
 
 
@@ -78,57 +71,41 @@ def terminate_program_function():
 # ORDER TYPE FUNCTIONS
 
 
-def ot_pu_function():
+def ot_pu_function(order, order_type_window):
     """Order Type Function - submits information, moves onto Pickup window"""
-    # Declares total_price variable, and sets to 0 as no delivery fee
-    global total_price
+    # Declares total_price variable, and sets to 0 as no delivery fee.
     total_price = 0
-    # Declares delivery_fee_applied variable, and sets to False as there is
-    # no delivery fee.
-    # Makes delivery_fee_applied a global variable so it can be accessed
-    # elsewhere
-    global delivery_fee_applied
+    # Declares delivery_fee_applied variable, and sets to False.
     delivery_fee_applied = False
-    # Declares address variable, and sets to "N/A" as it is not needed
-    # Makes address a global variable so it can be accessed elsewhere
-    global address
+    # Declares address variable, and sets to "N/A".
     address = "N/A"
-    # Declares phone_number variable, and sets to "N/A" as it is not
-    # needed
-    # Makes phone_number a global variable so it can be accessed elsewhere
-    global phone_number
+    # Declares phone_number variable, and sets to "N/A".
     phone_number = "N/A"
-    # Destroys Order Type window
+    # Destroys Order Type window.
     order_type_window.destroy()
-    # Calls Pick Up window function
-    pick_up_function()
+    # Calls Pick Up window function.
+    pick_up_function(order, total_price, delivery_fee_applied, address,
+                     phone_number)
 
 
-def ot_d_function():
+def ot_d_function(order, order_type_window):
     """Order Type Function - moves onto Delivery window"""
-    # Sets total_price to $3 as there is a delivery fee
-    # Makes total_price a global variable so it can be accessed elsewhere
-    global total_price
-    total_price = 3
-    # Declares delivery_fee_applied variable, and sets to True as there is
-    # a delivery fee
-    global delivery_fee_applied
+    # Sets total_price to DELIVERY_FEE as there is a delivery fee.
+    total_price = DELIVERY_FEE
+    # Declares delivery_fee_applied variable, and sets to True.
     delivery_fee_applied = True
     # Destroys Order Type window
     order_type_window.destroy()
     # Calls Delivery window function
-    delivery_function()
+    delivery_function(order, total_price, delivery_fee_applied)
 
 
 # ORDER TYPE WINDOW
 
 
-def order_type_function():
+def order_type_function(order):
     """Order Type Function - creates the Order Type window"""
     # Creates window and defines window properties
-    # Makes order_type_window a global variable so it can be accessed
-    # elsewhere
-    global order_type_window
     order_type_window = tk.Tk()
     order_type_window.title("Dream Pizzas - Order Type")
     order_type_window.configure(bg=BG)
@@ -146,14 +123,18 @@ def order_type_function():
                               fg=FG,
                               font=H2,
                               width=10,
-                              command=ot_pu_function)
+                              command=lambda: ot_pu_function(
+                                order,
+                                order_type_window))
     ot_delivery_btn = tk.Button(master=order_type_window,
                                 text="Delivery",
                                 bg=BG,
                                 fg=FG,
                                 font=H2,
                                 width=10,
-                                command=ot_d_function)
+                                command=lambda: ot_d_function(
+                                    order,
+                                    order_type_window))
     ot_exit_btn = tk.Button(master=order_type_window,
                             text="Exit",
                             bg=BG,
@@ -172,42 +153,40 @@ def order_type_function():
 # PICK UP WINDOW FUNCTIONS
 
 
-def pu_submit_function():
+def pu_submit_function(order, pick_up_window, pu_name_ent, total_price,
+                       delivery_fee_applied, address, phone_number):
     """Pick Up Function - submits information, moves onto Number of Pizzas
     window."""
-    # Retrieves value in pu_name_ent entry widget
+    # Retrieves value in pu_name_ent entry widget.
     name_ent = (pu_name_ent.get()).strip(" ")
-    # Checks if name_ent is not empty and name_check is False
+    # Checks for error handling.
     if len(name_ent) != 0 and name_ent.isnumeric() is False:
-        # If conditions are met, sets name variable to pu_name_ent
-        # value
-        global name
         name = name_ent
         # Destroys Pick Up window
         pick_up_window.destroy()
         # Calls Number of Pizzas window function
-        number_pizzas_function()
+        number_pizzas_function(order, name, total_price, delivery_fee_applied,
+                               address, phone_number)
 
 
-def pu_cancel_order_function():
+def pu_cancel_order_function(order, pick_up_window):
     """Pick Up Function - cancels order, goes back to order type page"""
     # Destroys Pick Up window
     pick_up_window.destroy()
     # Calls Order Type window function
-    order_type_function()
+    order_type_function(order)
 
 
-def pick_up_function():
+def pick_up_function(order, total_price, delivery_fee_applied, address,
+                     phone_number):
     """Pick Up Function - creates Pick Up window"""
-    # Creates window and defines window properties
-    # Makes pick_up_window a global variable so it can be accessed elsewhere
-    global pick_up_window
+    # Creates window and defines window properties.
     pick_up_window = tk.Tk()
     pick_up_window.title("Dream Pizzas - Pick Up")
     pick_up_window.configure(bg=BG)
     pick_up_window.geometry("500x300")
     pick_up_window.minsize(500, 300)
-    # Creates widgets and defines widget properties
+    # Creates widgets and defines widget properties.
     pick_up_lbl = tk.Label(master=pick_up_window,
                            text="Pick Up",
                            bg=BG,
@@ -218,9 +197,6 @@ def pick_up_function():
                            bg=BG,
                            fg=FG,
                            font=H2)
-    # Makes pu_name_ent a global variable so it can be accessed
-    # elsewhere
-    global pu_name_ent
     pu_name_ent = tk.Entry(master=pick_up_window,
                            fg=FG,
                            font=H3)
@@ -229,68 +205,64 @@ def pick_up_function():
                               bg=BG,
                               fg=FG,
                               font=H2,
-                              command=pu_submit_function)
+                              command=lambda: pu_submit_function(
+                                  order, pick_up_window, pu_name_ent,
+                                  total_price, delivery_fee_applied,
+                                  address, phone_number))
     pu_cancel_order_btn = tk.Button(master=pick_up_window,
                                     text="Cancel Order",
                                     bg=BG,
                                     fg=FG,
                                     font=S1,
-                                    command=pu_cancel_order_function)
-    # Packs widgets and defines widget placement
+                                    command=lambda: pu_cancel_order_function(
+                                        order,
+                                        pick_up_window))
+    # Packs widgets and defines widget placement.
     pick_up_lbl.pack(anchor="n")
     pu_name_lbl.pack(anchor="center", expand=True)
     pu_name_ent.pack(anchor="center", expand=True)
     pu_submit_btn.pack(anchor="center", expand=True)
     pu_cancel_order_btn.pack(anchor="se", padx=10, pady=10)
-    # Runs the window
+    # Runs the window.
     pick_up_window.mainloop()
 
 # Delivery Window Functions
 
 
-def d_submit_function():
+def d_submit_function(order, delivery_window, d_name_ent, d_address_ent,
+                      d_phone_ent, total_price, delivery_fee_applied):
     """Delivery Function - submits information, moves onto Number of Pizzas
     window"""
-    # Retrieves values in d_name_ent, d_address_ent, and d_phone_ent entry
-    # widgets and strips any pre or post whitespace
+    # Retrieves values and strips any pre or post whitespace
     name_ent = (d_name_ent.get()).strip(" ")
     address_ent = (d_address_ent.get()).strip(" ")
     phone_ent = (d_phone_ent.get()).strip(" ")
-    # Checks if name_ent, address_ent, and phone_ent are not empty and
-    # checks that name_ent and address_ent are strings and phone_ent is
-    # a number
+    # Checks for error handling
     if (len(name_ent) != 0 and len(address_ent) != 0 and len(phone_ent) != 0
             and name_ent.isnumeric() is False and address_ent.isnumeric() is
             False and phone_ent.isnumeric() is True):
-        # If conditions are met, sets name, address, and phone_number variables
-        # to d_name_ent, d_address_ent, and d_phone_ent values.
-        # Makes name, address, and phone_number global variables so they can be
-        # accessed elsewhere
-        global name
+        # Set values.
         name = name_ent
-        global address
         address = address_ent
-        global phone_number
         phone_number = phone_ent
         # Destroys Delivery window
         delivery_window.destroy()
         # Calls Number of Pizzas window function
-        number_pizzas_function()
+        number_pizzas_function(order, name, total_price, delivery_fee_applied,
+                               address, phone_number)
 
 
-def d_cancel_order_function():
+def d_cancel_order_function(order, delivery_window):
     """Delivery Function - cancels order, goes back to order type page"""
     # Destroys Delivery window
     delivery_window.destroy()
     # Calls Order Type window function
-    order_type_function()
+    order_type_function(order)
 
 
-def delivery_function():
+def delivery_function(order, total_price, delivery_fee_applied):
     """Delivery Function - creates delivery window"""
     # Creates window and defines window properties
-    # Makes delivery_window a global variable so it can be accessed elsewhere
-    global delivery_window
     delivery_window = tk.Tk()
     delivery_window.title("Dream Pizzas - Delivery")
     delivery_window.configure(bg=BG)
@@ -305,7 +277,7 @@ def delivery_function():
     d_disclaimer_lbl = tk.Label(master=delivery_window,
                                 bg=BG,
                                 fg=FG,
-                                text="*$3 delivery fee applies",
+                                text=f"*${DELIVERY_FEE} delivery fee applies",
                                 font=S1)
     d_name_frm = tk.Frame(master=delivery_window,
                           bg=BG)
@@ -314,8 +286,6 @@ def delivery_function():
                           bg=BG,
                           fg=FG,
                           font=H2)
-    # Makes d_name_ent a global variable so it can be accessed elsewhere
-    global d_name_ent
     d_name_ent = tk.Entry(master=d_name_frm,
                           fg=FG,
                           font=H3)
@@ -326,8 +296,6 @@ def delivery_function():
                              fg=FG,
                              text="Address:",
                              font=H2)
-    # Makes d_address_ent a global variable so it can be accessed elsewhere
-    global d_address_ent
     d_address_ent = tk.Entry(master=d_address_frm,
                              fg=FG,
                              font=H3)
@@ -338,8 +306,6 @@ def delivery_function():
                            fg=FG,
                            text="Phone:",
                            font=H2)
-    # Makes d_phone_ent a global variable so it can be accessed elsewhere
-    global d_phone_ent
     d_phone_ent = tk.Entry(master=d_phone_frm,
                            fg=FG,
                            font=H3)
@@ -348,13 +314,18 @@ def delivery_function():
                              bg=BG,
                              fg=FG,
                              font=H2,
-                             command=d_submit_function)
+                             command=lambda: d_submit_function(
+                                 order, delivery_window, d_name_ent,
+                                 d_address_ent, d_phone_ent, total_price,
+                                 delivery_fee_applied))
     d_cancel_order_btn = tk.Button(master=delivery_window,
                                    bg=BG,
                                    fg=FG,
                                    text="Cancel Order",
                                    font=S1,
-                                   command=d_cancel_order_function)
+                                   command=lambda: d_cancel_order_function(
+                                       order,
+                                       delivery_window))
     # Packs widgets and defines widget placement
     delivery_lbl.pack(anchor="n")
     d_disclaimer_lbl.pack(anchor="n")
@@ -375,13 +346,13 @@ def delivery_function():
 # Number of Pizzas Window Functions
 
 
-def np_increase_function():
+def np_increase_function(np_number_ent):
     """Number of Pizzas Function - adds 1 to the quantity of pizzas wanted"""
-    # Retrieves value in np_number_ent entry widget
+    # Retrieves value
     number = int(np_number_ent.get())
-    # Checks if number is less than MAX_PIZZAS
+    # Checks for error handling.
     if number < MAX_PIZZAS:
-        # If conditions are met, sets np_number_ent value to number + 1
+        # Sets np_number_ent value to number + 1
         np_number_ent.config(state="normal")
         np_number_ent.delete(0, tk.END)
         number += 1
@@ -389,14 +360,14 @@ def np_increase_function():
         np_number_ent.config(state="disabled")
 
 
-def np_decrease_function():
+def np_decrease_function(np_number_ent):
     """Number of Pizzas Function - subtracts 1 from the quantity of pizzas
     wanted"""
-    # Retrieves value in np_number_ent entry widget
+    # Retrieves value
     number = int(np_number_ent.get())
-    # Checks if number is greater than MIN_PIZZAS
+    # Checks for error handling.
     if number > MIN_PIZZAS:
-        # If conditions are met, sets np_number_ent value to number - 1
+        # Sets np_number_ent value to number - 1
         np_number_ent.config(state="normal")
         np_number_ent.delete(0, tk.END)
         number -= 1
@@ -404,34 +375,33 @@ def np_decrease_function():
         np_number_ent.config(state="disabled")
 
 
-def np_submit_function():
+def np_submit_function(order, number_pizzas_window, np_number_ent, name,
+                       total_price, delivery_fee_applied, address,
+                       phone_number):
     """Number of Pizzas Function - submits information, moves onto Pizzas
     window"""
-    # Makes number_pizzas a global variable so it can be accessed elsewhere
-    global number_pizzas
-    # Retrieves value in np_number_ent entry widget and assigns it to
-    # number_pizzas variable
+    # Retrieves values
     number_pizzas = int(np_number_ent.get())
     # Destroys Number of Pizzas window
     number_pizzas_window.destroy()
     # Calls Pizzas window function
-    pizzas_function()
+    pizzas_function(order, number_pizzas, name, total_price,
+                    delivery_fee_applied, address, phone_number)
 
 
-def np_cancel_order_function():
+def np_cancel_order_function(order, number_pizzas_window):
     """Number of Pizzas Function - cancels order, goes back to order type
     page"""
     # Destroys Number of Pizzas window
     number_pizzas_window.destroy()
     # Calls Order Type window function
-    order_type_function()
+    order_type_function(order)
 
 
-def number_pizzas_function():
+def number_pizzas_function(order, name, total_price, delivery_fee_applied,
+                           address, phone_number):
     """Number of Pizzas Function - creates Number of Pizzas window"""
     # Creates window and defines window properties
-    # Makes number_pizzas_window a global variable so it can be accessed
-    global number_pizzas_window
     number_pizzas_window = tk.Tk()
     number_pizzas_window.title("Dream Pizzas - Number of Pizzas")
     number_pizzas_window.configure(bg=BG)
@@ -450,46 +420,48 @@ def number_pizzas_function():
                                font=H2)
     np_frm = tk.Frame(master=number_pizzas_window,
                       bg=BG)
-    np_decrease_btn = tk.Button(master=np_frm,
-                                bg=BG,
-                                fg=FG,
-                                text="-",
-                                font=("Zain"),
-                                command=np_decrease_function,
-                                width=2)
-    # Makes np_number_ent a global variable so it can be accessed elsewhere
-    global np_number_ent
     np_number_ent = tk.Entry(master=np_frm,
                              bg=BG,
                              fg=FG,
                              font=("Zain"),
                              width=4,
                              justify="center")
-    # Sets np_number_ent to 1 and disables the entry widget - ensures that
-    # the user can only input a number between 1 and 5 (or whatever is
-    # specified in the np_decrease_function and np_increase_function if
-    # changed at a later date to accomodate for more or less pizzas)
-    np_number_ent.insert(0, 1)
+    np_decrease_btn = tk.Button(master=np_frm,
+                                bg=BG,
+                                fg=FG,
+                                text="-",
+                                font=("Zain"),
+                                command=lambda: np_decrease_function(
+                                    np_number_ent),
+                                width=2)
+    # Implements error handling.
+    np_number_ent.insert(0, MIN_PIZZAS)
     np_number_ent.config(state="disabled")
     np_increase_btn = tk.Button(master=np_frm,
                                 bg=BG,
                                 fg=FG,
                                 text="+",
                                 font=("Zain"),
-                                command=np_increase_function,
+                                command=lambda: np_increase_function(
+                                    np_number_ent),
                                 width=2)
     np_submit_btn = tk.Button(master=number_pizzas_window,
                               bg=BG,
                               fg=FG,
                               text="Submit",
                               font=H2,
-                              command=np_submit_function)
+                              command=lambda: np_submit_function(
+                                  order, number_pizzas_window, np_number_ent,
+                                  name, total_price, delivery_fee_applied,
+                                  address, phone_number))
     np_cancel_order_btn = tk.Button(master=number_pizzas_window,
                                     bg=BG,
                                     fg=FG,
                                     text="Cancel Order",
                                     font=S1,
-                                    command=np_cancel_order_function)
+                                    command=lambda: np_cancel_order_function(
+                                        order,
+                                        number_pizzas_window))
     # Packs widgets and defines widget placement
     number_pizzas_lbl.pack(anchor="n")
     np_how_many_lbl.pack(anchor="center", expand=True)
@@ -506,42 +478,36 @@ def number_pizzas_function():
 # Pizzas Window Functions
 
 
-def p_submit_function():
+def p_submit_function(order, pizzas_window, dropdowns_list, name, total_price,
+                      delivery_fee_applied, address, phone_number):
     """Pizzas Function - submits information, moves onto Summary window"""
-    # Creates chosen_pizzas list and makes it a global variable so it can be
-    # accessed elsewhere
-    global chosen_pizzas
     chosen_pizzas = []
-    # Iterates through dropdowns_list and appends the value of each dropdown to
-    # chosen_pizzas list
+    # Iterates through dropdowns_list and appends the value to chosen_pizzas
     for dropdown_choice in dropdowns_list:
         chosen_pizzas.append(dropdown_choice.get())
-    # Makes total_price a global variable so it can be accessed elsewhere
-    global total_price
-    # Iterates through chosen_pizzas list and adds the price of each pizza to
-    # total_price
+    # Iterates through chosen_pizzas list and adds the price to total_price
     for pizza in chosen_pizzas:
         total_price += PIZZAS[pizza]
     # Destroys Pizzas window
     pizzas_window.destroy()
     # Calls Summary window function
-    summary_function()
+    summary_function(order, chosen_pizzas, name, total_price,
+                     delivery_fee_applied, address, phone_number)
 
 
-def p_cancel_order_function():
+def p_cancel_order_function(order, pizzas_window):
     """Pizzas Function - cancels order, goes back to order type page"""
     # Destroys Pizzas window
     pizzas_window.destroy()
     # Calls Order Type window function
-    order_type_function()
+    order_type_function(order)
 
 
-def pizzas_function():
+def pizzas_function(order, number_pizzas, name, total_price,
+                    delivery_fee_applied, address, phone_number):
     """Pizzas Function - displays pizza choices and adds choices to the
     order"""
     # Creates window and defines window properties
-    # Makes pizzas_window a global variable so it can be accessed elsewhere
-    global pizzas_window
     pizzas_window = tk.Tk()
     pizzas_window.title("Dream Pizzas - Pizzas")
     pizzas_window.configure(bg=BG)
@@ -560,8 +526,7 @@ def pizzas_function():
     for pizza, price in PIZZAS.items():
         # Adds 1 to p_menu_count
         p_menu_count += 1
-        # Creates p_menu_frm, p_menu_number_lbl, p_menu_pizza_lbl, and
-        # p_menu_price_lbl widgets and defines properties
+        # Creates widgets and defines properties
         p_menu_frm = tk.Frame(master=pizzas_window,
                               bg=BG)
         p_menu_number_lbl = tk.Label(master=p_menu_frm,
@@ -584,15 +549,10 @@ def pizzas_function():
         p_menu_number_lbl.pack(side="left", padx=5)
         p_menu_pizza_lbl.pack(side="left", padx=5)
         p_menu_price_lbl.pack(side="left", padx=5)
-    # Creates dropdowns_list list, makes it a global variable so it can be
-    # accessed elsewhere
-    global dropdowns_list
     dropdowns_list = []
-    # Loops through to meet the number of pizzas the user wants to order
-    # and create a dropdown for each pizza to be chosen.
+    # Creates dropdowns as per number_pizzas.
     for number in range(1, number_pizzas + 1):
-        # Creates dropdown_frm, dropdown_pizza_number_lbl, and dropdown_choice
-        # widgets and defines properties
+        # Creates widgets and defines properties
         dropdown_frm = tk.Frame(master=pizzas_window,
                                 bg=BG)
         dropdown_pizza_number_lbl = tk.Label(master=dropdown_frm,
@@ -604,31 +564,34 @@ def pizzas_function():
                                        values=list(PIZZAS.keys()),
                                        state="readonly",
                                        width=35)
-        # Sets the default value of the dropdown to the first pizza in the
-        # PIZZAS dictionary
+        # Implement error handling.
         dropdown_choice.set(list(PIZZAS.keys())[0])
         dropdowns_list.append(dropdown_choice)
-        # Packs dropdown_frm, dropdown_pizza_number, and dropdown_choice
-        # widgets and defines widget placement
+        # Packs widgets and defines widget placement
         dropdown_frm.pack(anchor="center", expand=True)
         dropdown_pizza_number_lbl.pack(side="left", padx=5)
         dropdown_choice.pack(side="left", padx=5)
-    # Creates p_submit_btn and p_cancel_order_btn widgets and defines
-    # widget properties
+    # Creates widgets and defines widget properties
     p_submit_btn = tk.Button(master=pizzas_window,
                              bg=BG,
                              fg=FG,
                              text="Submit",
                              font=H2,
-                             command=p_submit_function)
+                             command=lambda:
+                             p_submit_function(order, pizzas_window,
+                                               dropdowns_list, name,
+                                               total_price,
+                                               delivery_fee_applied,
+                                               address, phone_number))
     p_cancel_order_btn = tk.Button(master=pizzas_window,
                                    bg=BG,
                                    fg=FG,
                                    text="Cancel Order",
                                    font=S1,
-                                   command=p_cancel_order_function)
-    # Packs p_submit_btn and p_cancel_order_btn widgets and defines widget
-    # placement
+                                   command=lambda: p_cancel_order_function(
+                                       order,
+                                       pizzas_window))
+    # Packs widgets and defines widget placement
     p_submit_btn.pack(anchor="center", expand=True)
     p_cancel_order_btn.pack(anchor="se", padx=10, pady=10)
     # Runs the window
@@ -637,23 +600,21 @@ def pizzas_function():
 # Summary Window Functions
 
 
-def s_cancel_order_function():
+def s_cancel_order_function(order, summary_window):
     """Summary Function - cancels order, goes back to Order Type window"""
     # Destroys Summary window
     summary_window.destroy()
     # Calls Order Type window function
-    order_type_function()
+    order_type_function(order)
 
 
-def s_confirm_order_function():
+def s_confirm_order_function(order, summary_window, chosen_pizzas, name,
+                             total_price, address, phone_number):
     """Summary Function - confirms order, restarts order by opening
     Order Type window"""
-    global order
     # Adds 1 to order
     order += 1
-    # Creates saved_orders dictionary key and assigns name variable, address
-    # variable, phone_number variable, chosen_pizzas list, and total_price
-    # variable as the value to the key
+    # Saves orders to saved_orders dictionary.
     saved_orders[f"order_{order}"] = [name,
                                       address,
                                       phone_number,
@@ -662,21 +623,20 @@ def s_confirm_order_function():
     # Destroys Summary window
     summary_window.destroy()
     # Calls Order Type window function
-    order_type_function()
+    order_type_function(order)
 
 
-def summary_function():
+def summary_function(order, chosen_pizzas, name, total_price,
+                     delivery_fee_applied,
+                     address, phone_number):
     """Summary Function - creates Summary window"""
     # Creates window and defines window properties
-    # Makes summary_window a global variable so it can be accessed elsewhere
-    global summary_window
     summary_window = tk.Tk()
     summary_window.title("Dream Pizzas - Summary")
     summary_window.configure(bg=BG)
     summary_window.geometry("400x600")
     summary_window.minsize(800, 400)
-    # Creates summary_lbl, s_name_lbl, s_name_data_lbl, and s_pizzas_lbl
-    # and defines widget propoerties
+    # Creates and defines widget properties
     summary_lbl = tk.Label(master=summary_window,
                            bg=BG,
                            fg=FG,
@@ -697,16 +657,13 @@ def summary_function():
                             fg=FG,
                             text="Pizzas:",
                             font=H2)
-    # Packs summary_lbl, s_name_lbl, and s_name_data_lbl, s_pizzas_lbl
-    # widgets and defines widget placement
+    # Packs widgets and defines widget placement
     summary_lbl.pack(anchor="n")
     s_name_lbl.pack(anchor="center", expand=True)
     s_name_data_lbl.pack(anchor="center", expand=True)
     s_pizzas_lbl.pack(anchor="center", expand=True)
     for pizza in chosen_pizzas:
-        # Iterates through chosen_pizzas list and creates s_pizzas_frm,
-        # s_pizzas_data_lbl, and s_pizza_price_data_lbl widgets for
-        # each pizza in the list and defines widget properties
+        # Iterates to create and define widget properties
         s_pizzas_frm = tk.Frame(master=summary_window,
                                 bg=BG)
         s_pizzas_data_lbl = tk.Label(master=s_pizzas_frm,
@@ -719,15 +676,11 @@ def summary_function():
                                           fg=FG,
                                           text=f"(${PIZZAS[pizza]})",
                                           font=H3)
-        # Packs s_pizzas_frm, s_pizzas_data_lbl, and s_pizza_price_data_lbl
-        # widgets and defines widget placement
+        # Packs widgets and defines widget placement
         s_pizzas_frm.pack(anchor="center", expand=True)
         s_pizzas_data_lbl.pack(side="left", padx=5)
         s_pizza_price_data_lbl.pack(side="left", padx=5)
-    # Creates s_address_lbl, s_address_data_lbl, s_phone_lbl,
-    # s_phone_data_lbl, s_total_lbl, s_total_data_lbl, s_btn_frm,
-    # s_cancel_order_btn, s_confirm_order_btn, and s_sign_out_btn
-    # widgets and defines properties
+    # Creates widgets and defines properties
     s_address_lbl = tk.Label(master=summary_window,
                              bg=BG,
                              fg=FG,
@@ -768,23 +721,25 @@ def summary_function():
                                    fg=FG,
                                    text="Cancel Order",
                                    font=S1,
-                                   command=s_cancel_order_function)
+                                   command=lambda: s_cancel_order_function(
+                                       order,
+                                       summary_window))
     s_confirm_order_btn = tk.Button(master=s_btn_frm,
                                     bg=BG,
                                     fg=FG,
                                     text="Confirm Order",
                                     font=S1,
-                                    command=s_confirm_order_function)
+                                    command=lambda: s_confirm_order_function(
+                                        order, summary_window, chosen_pizzas,
+                                        name, total_price, address,
+                                        phone_number))
     s_sign_out_btn = tk.Button(master=s_btn_frm,
                                bg=BG,
                                fg=FG,
                                text="Sign Out",
                                font=S1,
                                command=terminate_program_function)
-    # Packs s_address_lbl, s_address_data_lbl, s_phone_lbl, s_phone_data_lbl,
-    # s_total_lbl, s_total_data_lbl, s_btn_frm, s_cancel_order_btn,
-    # s_confirm_order_btn, and s_sign_out_btn widgets and defines widget
-    # placement
+    # Packs widgets and defines widget placement
     s_address_lbl.pack(anchor="center", expand=True)
     s_address_data_lbl.pack(anchor="center", expand=True)
     s_phone_lbl.pack(anchor="center", expand=True)
@@ -801,4 +756,4 @@ def summary_function():
 # Runs program
 
 
-order_type_function()
+order_type_function(order)
